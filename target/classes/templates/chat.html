@@ -65,7 +65,6 @@
 </div>
 
 <script th:inline="javascript">
-
     /**
      * WebSocket Client
      *
@@ -83,7 +82,6 @@
         webSocket.onopen = function (event) {
             console.log('WebSocket open connection');
         };
-
         /**
          * Server send 1) broadcast message, 2) online users.
          */
@@ -107,14 +105,12 @@
                 });
             }
         };
-
         /**
          * Close connection
          */
         webSocket.onclose = function (event) {
             console.log('WebSocket close connection.');
         };
-
         /**
          * Exception
          */
@@ -123,10 +119,7 @@
         };
         return webSocket;
     }
-
     var webSocket = getWebSocket();
-
-
     /**
      * Send messages to server use webSocket.
      */
@@ -137,14 +130,12 @@
             $message.val(null);
         }
     }
-
     /**
      * Clear screen
      */
     function clearMsg() {
         $(".message-container").empty();
     }
-
     /**
      * Enter to send message.
      */
@@ -152,10 +143,7 @@
         var e = event || window.event || arguments.callee.caller.arguments[0];
         e.keyCode === 13 && sendMsgToServer();
     };
-
 </script>
 
 </body>
 </html>
-
-

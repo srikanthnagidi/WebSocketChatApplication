@@ -8,9 +8,9 @@ public class Message {
 
     private String fromUserName;
     private String content;
-    private MessageType type;
+    private String type;
 
-
+    public  Message(){}
     public String getFromUserName() {
         return fromUserName;
     }
@@ -24,6 +24,12 @@ public class Message {
         this.content = content;
     }
 
+    public Message(String fromUserName, String content, String type) {
+        this.fromUserName = fromUserName;
+        this.content = content;
+        this.type = type;
+    }
+
     public String getContent() {
         return content;
     }
@@ -32,15 +38,11 @@ public class Message {
         this.content = content;
     }
 
-    public MessageType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(MessageType type) {
+    public void setType(String type) {
         this.type = type;
-    }
-
-    public enum MessageType{
-            ENTER, CHAT, LEAVE
     }
 }
