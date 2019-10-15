@@ -3,6 +3,9 @@
 <head>
     <title>Chat Room Login</title>
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src = "/webjars/sockjs-client/sockjs.min.js"></script>
+
     <style>
         *, *:after, *:before {
             -webkit-box-sizing: border-box;
@@ -139,7 +142,7 @@
             <input id="username" name="username" class="text" type="text" placeholder="Username">
         </div>
         <div class="mb2">
-            <a class="act-but submit" onclick="login()">Login</a>
+            <button class="act-but submit" onclick="login()">Login</button>
         </div>
     </form>
 </div>
@@ -147,13 +150,13 @@
 <script>
 
     /**
-     * Login
+     * onclick to Login
      */
     function login() {
         // TODO: complete the login function
-        var inputVal = document.getElementById("username").value;
-        sessionStorage.setItem('username',inputVal);
-
+        var username = document.getElementById("username").value;
+        console.log("Username is: " + username );
+        window.location.href = "http://localhost:8080/index?username="+username;
     }
 
     /**
@@ -163,7 +166,6 @@
         var e = event || window.event || arguments.callee.caller.arguments[0];
         e.keyCode === 13 && login();
     };
-
 
 </script>
 
