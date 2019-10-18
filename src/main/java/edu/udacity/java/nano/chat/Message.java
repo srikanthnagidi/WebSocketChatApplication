@@ -9,6 +9,7 @@ public class Message {
     private String fromUserName;
     private String content;
     private String type;
+    private int onlineCount;
 
     public  Message(){}
     public String getFromUserName() {
@@ -28,6 +29,11 @@ public class Message {
         this.fromUserName = fromUserName;
         this.content = content;
         this.type = type;
+    }
+
+    public Message(String fromUserName, int onlineCount) {
+        this.fromUserName = fromUserName;
+        this.onlineCount = onlineCount;
     }
 
     public String getContent() {
