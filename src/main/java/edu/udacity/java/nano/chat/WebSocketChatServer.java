@@ -1,7 +1,7 @@
 package edu.udacity.java.nano.chat;
 
 import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -25,8 +25,7 @@ public class WebSocketChatServer {
 
     private static void sendMessageToAll(String msg) {
         //TODO: add send message method.
-        for(String keys : onlineSessions.keySet()){
-        }
+
     }
 
     /**
@@ -48,7 +47,7 @@ public class WebSocketChatServer {
     @OnMessage
     public void onMessage(Session session, String jsonStr) throws JSONException {
         //TODO: add send message.
-        final JSONObject obj = new JSONObject();
+        final JSONObject obj = new JSONObject(jsonStr);
         String userName = obj.getString("username");
         String msg = obj.getString("msg");
         Message message = new Message(userName, msg);
