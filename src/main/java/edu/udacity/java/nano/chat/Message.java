@@ -25,6 +25,10 @@ public class Message {
         this.content = content;
     }
 
+    public void setOnlineCount(int onlineCount) {
+        this.onlineCount = onlineCount;
+    }
+
     public Message(String fromUserName, String content, String type) {
         this.fromUserName = fromUserName;
         this.content = content;

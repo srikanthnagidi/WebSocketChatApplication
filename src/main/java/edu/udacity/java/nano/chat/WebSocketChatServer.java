@@ -35,8 +35,11 @@ public class WebSocketChatServer {
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username) {
         onlineSessions.put(username,session);
-        Message message = new Message(username, onlineSessions.size());
-        //sendMessageToAll();
+        Message message = new Message();
+        message.setFromUserName(username);
+        message.setContent("!Connected");
+        message.setOnlineCount(onlineSessions.size());
+        sendMessageToAll(username + "is Connected");
     }
 
     /**
@@ -56,8 +59,14 @@ public class WebSocketChatServer {
      * Close connection, 1) remove session, 2) update user.
      */
     @OnClose
-    public void onClose(Session session) {
+    public void onClose(Session session, @PathParam("username") String username) {
         //TODO: add close connection.
+        onlineSessions.remove(username);
+        Message message = new Message();
+        message.setFromUserName(username);
+        message.setContent("Disconnected");
+        message.setOnlineCount(onlineSessions.size());
+        sendMessageToAll(username + "Disconnected");
     }
 
     /**
