@@ -38,6 +38,8 @@
                     <div class="mdui-container" style="padding:20px 35px">
                         <!-- TODO: add a send button to send message -->
                         <button class="mdui-btn mdui-color-theme mdui-ripple"
+                                onclick="sendMsgToServer()">Send Message</button>
+                        <button class="mdui-btn mdui-color-theme mdui-ripple"
                                 onclick="clearMsg()">Clear
                         </button>
                     </div>
@@ -54,10 +56,12 @@
                 <div class="mdui-chip">
                     <span class="mdui-chip-icon mdui-color-blue">
                         <i class="mdui-icon material-icons">face</i></span>
+                    <span class= "chat-num"></span>
                     <span class="mdui-chip-title">Online Users</span>
                     <!-- TODO: check online number num -->
                 </div>
                 <!-- TODO: add a message container -->
+                <div class="message-container"></div>
             </div>
 
         </div>
@@ -75,7 +79,7 @@
         /**
          * WebSocket client PS：URL shows WebSocket protocal, port number, and then end point.
          */
-        var webSocket = new WebSocket(/*[[${webSocketUrl}]]*/ 'ws://localhost:8080/chat');
+        var webSocket = new WebSocket('ws://localhost:8080/chat/' + $('#username').text());
         /**
          * websocket open connection.
          */
@@ -94,7 +98,21 @@
                 $messageContainer.append(
                     '<div class="mdui-card" style="margin: 10px 0;">' +
                     '<div class="mdui-card-primary">' +
-                    '<div class="mdui-card-content message-content">' + message.username + "：" + message.msg + '</div>' +
+                    '<div class="mdui-card-content message-content">' + message.fromUserName + "：" + message.content + '</div>' +
+                    '</div></div>');
+            }
+            if (message.type === 'LEAVE') {
+                $messageContainer.append(
+                    '<div class="mdui-card" style="margin: 10px 0;">' +
+                    '<div class="mdui-card-primary">' +
+                    '<div class="mdui-card-content message-content">' + message.fromUserName + "：" + message.content + '</div>' +
+                    '</div></div>');
+            }
+            if (message.type === 'ENTER') {
+                $messageContainer.append(
+                    '<div class="mdui-card" style="margin: 10px 0;">' +
+                    '<div class="mdui-card-primary">' +
+                    '<div class="mdui-card-content message-content">' + message.fromUserName + "：" + message.content + '</div>' +
                     '</div></div>');
             }
             $('.chat-num').text(message.onlineCount);

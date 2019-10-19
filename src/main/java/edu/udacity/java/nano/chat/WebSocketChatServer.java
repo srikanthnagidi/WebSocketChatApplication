@@ -1,11 +1,12 @@
 package edu.udacity.java.nano.chat;
 
-import com.alibaba.fastjson.JSONException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Map;
@@ -16,9 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see ServerEndpoint WebSocket Client
  * @see Session   WebSocket Session
  */
-
 @Component
-@ServerEndpoint("/chat")
+@ServerEndpoint(value="/chat/{username}")
 public class WebSocketChatServer {
     /**
      * All chat sessions.
@@ -29,8 +29,8 @@ public class WebSocketChatServer {
         //TODO: add send message method.
         onlineSessions.forEach((k, v) -> {
             try {
-                onlineSessions.get(k).getBasicRemote().sendObject(msg);
-            } catch (IOException | EncodeException e) {
+                onlineSessions.get(k).getBasicRemote().sendText(msg);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         });
@@ -40,13 +40,18 @@ public class WebSocketChatServer {
      * Open connection, 1) add session, 2) add user.
      */
     @OnOpen
-    public void onOpen(Session session, @RequestParam("username") String username) {
+    public void onOpen(Session session, @PathParam("username") String username) {
         onlineSessions.put(username,session);
         Message message = new Message();
         message.setFromUserName(username);
-        message.setContent("!Connected");
+        message.setContent("is Connected");
+        message.setType("ENTER");
         message.setOnlineCount(onlineSessions.size());
-        sendMessageToAll(username + "is Connected");
+        try{
+            sendMessageToAll(convertToJSON(message));
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -55,25 +60,37 @@ public class WebSocketChatServer {
     @OnMessage
     public void onMessage(Session session, String jsonStr) throws JSONException {
         //TODO: add send message.
-        final JSONObject obj = new JSONObject(jsonStr);
+
+        JSONObject obj = new JSONObject(jsonStr);
         String userName = obj.getString("username");
         String msg = obj.getString("msg");
         Message message = new Message(userName, msg);
-        sendMessageToAll(message.getContent());
+        message.setType("SPEAK");
+        message.setOnlineCount(onlineSessions.size());
+        try{
+            sendMessageToAll(convertToJSON(message));
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
     }
 
     /**
      * Close connection, 1) remove session, 2) update user.
      */
     @OnClose
-    public void onClose(Session session, @RequestParam("username") String username) {
+    public void onClose(Session session, @PathParam("username") String username) {
         //TODO: add close connection.
         onlineSessions.remove(username);
         Message message = new Message();
         message.setFromUserName(username);
-        message.setContent("Disconnected");
+        message.setContent("left from chat");
+        message.setType("LEAVE");
         message.setOnlineCount(onlineSessions.size());
-        sendMessageToAll(username + "Disconnected");
+        try{
+            sendMessageToAll(convertToJSON(message));
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -83,5 +100,9 @@ public class WebSocketChatServer {
     public void onError(Session session, Throwable error) {
         error.printStackTrace();
     }
-
+    static String convertToJSON(Message message) throws JsonProcessingException{
+        ObjectMapper Obj = new ObjectMapper();
+        String json = Obj.writeValueAsString(message);
+        return json;
+    }
 }

@@ -11,6 +11,10 @@ public class Message {
     private String type;
     private int onlineCount;
 
+    public int getOnlineCount() {
+        return onlineCount;
+    }
+
     public  Message(){}
     public String getFromUserName() {
         return fromUserName;
@@ -55,4 +59,5 @@ public class Message {
     public void setType(String type) {
         this.type = type;
     }
+
 }
