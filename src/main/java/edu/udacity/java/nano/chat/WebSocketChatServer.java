@@ -3,9 +3,11 @@ package edu.udacity.java.nano.chat;
 import com.alibaba.fastjson.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.websocket.*;
-import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 /**
@@ -25,14 +27,20 @@ public class WebSocketChatServer {
 
     private static void sendMessageToAll(String msg) {
         //TODO: add send message method.
-
+        onlineSessions.forEach((k, v) -> {
+            try {
+                onlineSessions.get(k).getBasicRemote().sendObject(msg);
+            } catch (IOException | EncodeException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
      * Open connection, 1) add session, 2) add user.
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("username") String username) {
+    public void onOpen(Session session, @RequestParam("username") String username) {
         onlineSessions.put(username,session);
         Message message = new Message();
         message.setFromUserName(username);
@@ -58,7 +66,7 @@ public class WebSocketChatServer {
      * Close connection, 1) remove session, 2) update user.
      */
     @OnClose
-    public void onClose(Session session, @PathParam("username") String username) {
+    public void onClose(Session session, @RequestParam("username") String username) {
         //TODO: add close connection.
         onlineSessions.remove(username);
         Message message = new Message();
