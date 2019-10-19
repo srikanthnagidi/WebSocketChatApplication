@@ -1,7 +1,6 @@
 package edu.udacity.java.nano.chat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -47,11 +46,7 @@ public class WebSocketChatServer {
         message.setContent("is Connected");
         message.setType("ENTER");
         message.setOnlineCount(onlineSessions.size());
-        try{
-            sendMessageToAll(convertToJSON(message));
-        }catch (JsonProcessingException e){
-            e.printStackTrace();
-        }
+        sendMessageToAll(convertToJSON(message));
     }
 
     /**
@@ -67,11 +62,7 @@ public class WebSocketChatServer {
         Message message = new Message(userName, msg);
         message.setType("SPEAK");
         message.setOnlineCount(onlineSessions.size());
-        try{
-            sendMessageToAll(convertToJSON(message));
-        }catch (JsonProcessingException e){
-            e.printStackTrace();
-        }
+        sendMessageToAll(convertToJSON(message));
     }
 
     /**
@@ -86,11 +77,7 @@ public class WebSocketChatServer {
         message.setContent("left from chat");
         message.setType("LEAVE");
         message.setOnlineCount(onlineSessions.size());
-        try{
-            sendMessageToAll(convertToJSON(message));
-        }catch (JsonProcessingException e){
-            e.printStackTrace();
-        }
+        sendMessageToAll(convertToJSON(message));
     }
 
     /**
@@ -100,9 +87,7 @@ public class WebSocketChatServer {
     public void onError(Session session, Throwable error) {
         error.printStackTrace();
     }
-    static String convertToJSON(Message message) throws JsonProcessingException{
-        ObjectMapper Obj = new ObjectMapper();
-        String json = Obj.writeValueAsString(message);
-        return json;
+    static String convertToJSON(Message message){
+        return new Gson().toJson(message);
     }
 }
