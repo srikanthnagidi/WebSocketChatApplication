@@ -34,7 +34,6 @@ public class WebSocketChatServer {
             }
         });
     }
-
     /**
      * Open connection, 1) add session, 2) add user.
      */
