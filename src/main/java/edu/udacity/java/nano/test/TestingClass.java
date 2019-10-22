@@ -36,8 +36,9 @@ public class TestingClass {
         mockMvc.perform(get("/index?username=sri")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("sri")));
     }
-
-   /* @Test
-    public void testLeave() throws Exception{
-    }*/
+    @Test
+    public void checkLeave() throws Exception{
+        chat();
+        login();
+    }
 }
