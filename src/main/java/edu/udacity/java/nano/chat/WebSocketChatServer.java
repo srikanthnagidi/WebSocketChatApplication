@@ -25,7 +25,6 @@ public class WebSocketChatServer {
     private static Map<String, Session> onlineSessions = new ConcurrentHashMap<>();
 
     private static void sendMessageToAll(String msg) {
-        //TODO: add send message method.
         onlineSessions.forEach((k, v) -> {
             try {
                 onlineSessions.get(k).getBasicRemote().sendText(msg);
@@ -53,8 +52,6 @@ public class WebSocketChatServer {
      */
     @OnMessage
     public void onMessage(Session session, String jsonStr) throws JSONException {
-        //TODO: add send message.
-
         JSONObject obj = new JSONObject(jsonStr);
         String userName = obj.getString("username");
         String msg = obj.getString("msg");
@@ -69,7 +66,6 @@ public class WebSocketChatServer {
      */
     @OnClose
     public void onClose(Session session, @PathParam("username") String username) {
-        //TODO: add close connection.
         onlineSessions.remove(username);
         Message message = new Message();
         message.setFromUserName(username);
